@@ -1,9 +1,6 @@
 package contact.service.jpa;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
-
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,9 +13,13 @@ import contact.entity.Contact;
 import contact.service.ContactDao;
 
 /**
- * Data access object for saving and retrieving contacts.
- * This DAO uses JPA.
+ * Data access object for saving and retrieving contacts,
+ * using JPA.
+ * To get an instance of this class use:
+ * <p>
+ * <tt>
  * dao = DaoFactory.getInstance().getContactDao()
+ * </tt>
  * 
  * @author jim
  */
@@ -26,9 +27,13 @@ public class JpaContactDao implements ContactDao {
 	/** the EntityManager for accessing JPA persistence services. */
 	private final EntityManager em;
 	
+	/**
+	 * constructor with injected EntityManager to use.
+	 * @param em an EntityManager for accessing JPA services.
+	 */
 	public JpaContactDao(EntityManager em) {
 		this.em = em;
-		createTestContact( );
+		//createTestContact( );
 	}
 	
 	/** add contacts for testing. */
@@ -70,9 +75,10 @@ public class JpaContactDao implements ContactDao {
 	 */
 	@Override
 	public List<Contact> findByTitle(String titlestr) {
-		// OK, since you guys may not JPQ Query Language I'll give you a hint:
-		Query query = em.createQuery("select c from Contact c where c.title LIKE :title");
-		query.setParameter("title", titlestr);
+		// LIKE does string match using patterns.
+		Query query = em.createQuery("select c from Contact c where LOWER(c.title) LIKE :title");
+		// % is wildcard that matches anything
+		query.setParameter("title", "%"+titlestr.toLowerCase()+"%");
 		// now why bother to copy one list to another list?
 		java.util.List<Contact> result = Lists.newArrayList( query.getResultList() );
 		return result;
@@ -83,21 +89,9 @@ public class JpaContactDao implements ContactDao {
 	 */
 	@Override
 	public boolean delete(long id) {
-		//TODO implement this
-		//return false;
-		Contact contact = em.find(Contact.class, id);
-		if (contact == null) return false;
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			em.remove(contact);
-			tx.commit();
-			return true;
-		} catch (EntityExistsException ex) {
-			Logger.getLogger(this.getClass().getName()).warning(ex.getMessage());
-			if (tx.isActive()) try { tx.rollback(); } catch(Exception e) {}
-			return false;
-		}
+		//TODO implement this.  See save for example
+		return false;
+		
 	}
 	
 	/**
@@ -124,8 +118,7 @@ public class JpaContactDao implements ContactDao {
 	 */
 	@Override
 	public boolean update(Contact update) {
-		//TODO
+		//TODO implement this, too.
 		return false;
 	}
-
 }
