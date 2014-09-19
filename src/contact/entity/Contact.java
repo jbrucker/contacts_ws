@@ -1,9 +1,16 @@
 package contact.entity;
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.GenerationType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -11,21 +18,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  * title is text to display for this contact in a list of contacts,
  * such as a nickname or company name.
  */
+@Entity
 @XmlRootElement(name="contact")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Contact implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@XmlAttribute
 	private long id;
-	private String name;
+	//TODO how to specify a required element or attribute of an entity?
+	@XmlElement(required=true,nillable=false)
 	private String title;
+	private String name;
+	
 	private String email;
 	/** URL of photo */
 	private String photoUrl;
 	
+	/** Create a new contact with no data.  Intended for use by persistence framework. */
 	public Contact() { }
 	
+	/** Create a new contact with the given title, name, and email address. */
 	public Contact(String title, String name, String email ) {
 		this.title = title;
 		this.name = name;
@@ -91,6 +106,22 @@ public class Contact implements Serializable {
 		if (other == null || other.getClass() != this.getClass()) return false;
 		Contact contact = (Contact) other;
 		return contact.getId() == this.getId();
+	}
+	
+	/**
+	 * Copy another contact's data into this contact.
+	 * The id of this contact is not changed.  This allows
+	 * complete updates of an existing contact without
+	 * changing the object's identity.
+	 * @param other another Contact whose fields are copied to this contact.
+	 */
+	public void copyOf(Contact other) {
+		if (other == null) throw new IllegalArgumentException("source contact may not be null");
+		// don't check the id value. Its the caller's responsibility to supply correct argument
+		this.setTitle(other.getTitle()); 
+		this.setName(other.getName()); 
+		this.setEmail(other.getEmail());
+		this.setPhotoUrl(other.getPhotoUrl());
 	}
 	
 	/**
