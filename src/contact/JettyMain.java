@@ -9,6 +9,7 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -175,7 +176,7 @@ public class JettyMain {
 		ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 		// setConstraintMappings requires an array or List of ConstraintMapping
 		securityHandler.setConstraintMappings(new ConstraintMapping[] { mapping } );
-		securityHandler.setAuthenticator(new BasicAuthenticator());
+		securityHandler.setAuthenticator(new DigestAuthenticator());
 		securityHandler.setLoginService(loginService);
 		
 		securityHandler.setHandler(handler);
