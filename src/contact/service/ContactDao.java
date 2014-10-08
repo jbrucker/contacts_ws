@@ -2,7 +2,7 @@ package contact.service;
 
 import java.util.List;
 
-import contact.entity.Contact;
+import contact.entity.*;
 /**
  * Interface defines the operations required by 
  * a DAO for Contacts.
@@ -25,7 +25,7 @@ public interface ContactDao {
 	 * @return list of all contacts in persistent storage.
 	 *   If no contacts, returns an empty list.
 	 */
-	public abstract List<Contact> findAll();
+	public abstract List<Contact> findAll( );
 	
 	/**
 	 * Find a contact whose title starts with the  
@@ -68,5 +68,5 @@ public interface ContactDao {
 	 */
 	public abstract boolean update(Contact update);
 
-
+	
 }

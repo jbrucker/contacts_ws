@@ -66,7 +66,10 @@ public class JpaContactDao implements ContactDao {
 	@Override
 	public List<Contact> findAll() {
 		//TODO
-		return null;
+		//return null;
+		Query query = em.createQuery("select c from Contact c", Contact.class);
+		// now why bother to copy one list to another list?
+		return query.getResultList() ;
 	}
 
 	/**
@@ -90,7 +93,20 @@ public class JpaContactDao implements ContactDao {
 	@Override
 	public boolean delete(long id) {
 		//TODO implement this.  See save for example
-		return false;
+		//return false;
+		Contact contact = find(id);
+		if (contact == null) return false;
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			em.remove(contact);
+			tx.commit();
+			return true;
+		} catch (EntityExistsException ex) {
+			Logger.getLogger(this.getClass().getName()).warning(ex.getMessage());
+			if (tx.isActive()) try { tx.rollback(); } catch(Exception e) {}
+			return false;
+		}
 		
 	}
 	
@@ -118,7 +134,16 @@ public class JpaContactDao implements ContactDao {
 	 */
 	@Override
 	public boolean update(Contact update) {
-		//TODO implement this, too.
-		return false;
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			em.merge(update);
+			tx.commit();
+			return true;
+		} catch (EntityExistsException ex) {
+			Logger.getLogger(this.getClass().getName()).warning(ex.getMessage());
+			if (tx.isActive()) try { tx.rollback(); } catch(Exception e) {}
+			return false;
+		}
 	}
 }

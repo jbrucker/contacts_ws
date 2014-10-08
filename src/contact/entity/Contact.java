@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A person is a contact with a name, title, and email.
@@ -28,14 +29,19 @@ public class Contact implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@XmlAttribute
 	private long id;
-	//TODO how to specify a required element or attribute of an entity?
+	/** the display title of this contact, such as nickname */
 	@XmlElement(required=true,nillable=false)
 	private String title;
+	/** full name of this contact */
 	private String name;
-	
+	/** contact's email */
 	private String email;
 	/** URL of photo */
 	private String photoUrl;
+	
+	/** owner of this contact */
+	//@XmlTransient
+//	private User owner;
 	
 	/** Create a new contact with no data.  Intended for use by persistence framework. */
 	public Contact() { }
@@ -92,6 +98,10 @@ public class Contact implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
+	
+//	public User getOwner() { return owner; }
+
+//	public void setOwner(User owner) { this.owner = owner; }
 
 	@Override
 	public String toString() {
@@ -108,6 +118,19 @@ public class Contact implements Serializable {
 		return contact.getId() == this.getId();
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((photoUrl == null) ? 0 : photoUrl.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+
 	/**
 	 * Copy another contact's data into this contact.
 	 * The id of this contact is not changed.  This allows
@@ -149,4 +172,7 @@ public class Contact implements Serializable {
 	private static boolean isEmpty(String arg) {
 		return arg == null || arg.matches("\\s*") ;
 	}
+
+	
+	
 }

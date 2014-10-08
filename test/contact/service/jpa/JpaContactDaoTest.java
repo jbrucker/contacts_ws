@@ -33,12 +33,6 @@ public class JpaContactDaoTest {
 	// a test contact
 	private Contact foo;
 	
-	@BeforeClass
-	public static void doFirst() {
-		// this method is called before any tests and before the @Before method
-		url = JettyMain.startServer( );
-	}
-	
 	@AfterClass
 	
 	@Before

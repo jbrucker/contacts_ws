@@ -24,24 +24,6 @@ public class MemContactDao implements ContactDao {
 	public MemContactDao() {
 		contacts = new ArrayList<Contact>();
 		nextId = new AtomicLong(1000L);
-		createTestContact( );
-	}
-	
-	/** add contacts for testing.  id is the starting id to use. */
-	private void createTestContact( ) {
-		long id = 101;
-		if (find(id) == null) {
-			Contact test = new Contact("Test contact", "Joe Experimental", "none@testing.com");
-			test.setId(id);
-			contacts.add(test);
-		}
-		id++;
-		if (find(id) == null) {
-			Contact test2 = new Contact("Another test contact", "Testosterone", "testee@foo.com");
-			test2.setId(id);
-			contacts.add(test2);
-		}
-		if (nextId.longValue() <= id) nextId.set(id+1);
 	}
 
 	/**
