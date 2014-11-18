@@ -1,4 +1,4 @@
-package contact.main;
+package contact.app;
 
 import java.io.*;
 import java.util.*;

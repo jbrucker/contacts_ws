@@ -2,17 +2,14 @@ package contact.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GenerationType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A person is a contact with a name, title, and email.
@@ -38,6 +35,8 @@ public class Contact implements Serializable {
 	private String email;
 	/** URL of photo */
 	private String photoUrl;
+	/** person who owns this contact */
+	private String owner;
 	
 	/** owner of this contact */
 	//@XmlTransient
@@ -52,6 +51,21 @@ public class Contact implements Serializable {
 		this.name = name;
 		this.email = email;
 		this.photoUrl = "";
+		this.owner = "";
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public String getOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	public Contact(long id) {
