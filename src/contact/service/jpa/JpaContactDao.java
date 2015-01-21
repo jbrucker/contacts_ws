@@ -33,24 +33,8 @@ public class JpaContactDao implements ContactDao {
 	 */
 	public JpaContactDao(EntityManager em) {
 		this.em = em;
-		//createTestContact( );
 	}
-	
-	/** add contacts for testing. */
-	private void createTestContact( ) {
-		long id = 101; // usually we should let JPA set the id
-		if (find(id) == null) {
-			Contact test = new Contact("Test contact", "Joe Experimental", "none@testing.com");
-			test.setId(id);
-			save(test);
-		}
-		id++;
-		if (find(id) == null) {
-			Contact test2 = new Contact("Another Test contact", "Testosterone", "testee@foo.com");
-			test2.setId(id);
-			save(test2);
-		}
-	}
+
 
 	/**
 	 * @see contact.service.ContactDao#find(long)

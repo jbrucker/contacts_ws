@@ -34,7 +34,7 @@ public abstract class DaoFactory {
 		if (factory == null) {
 			synchronized(lock) {
 				if (factory == null) {
-					factory = new contact.service.jpa.JpaDaoFactory();
+					factory = new contact.service.mem.MemDaoFactory();
 					factory.init();
 				}
 			}

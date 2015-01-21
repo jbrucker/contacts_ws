@@ -19,6 +19,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
 
+import contact.entity.Contact;
+import contact.service.ContactDao;
+import contact.service.DaoFactory;
+
 /**
  * <p>
  * This example shows how to deploy a RESTful web service using a Jetty server
@@ -136,6 +140,7 @@ public class JettyMain {
 				EnumSet.of(DispatcherType.REQUEST));
 
 		// (5) Add the context (our application) to the Jetty server.
+		//     If you don't want authentication, just use setHandler( context );
 		server.setHandler( getSecurityHandler(context) );
 
 		try {
@@ -195,7 +200,7 @@ public class JettyMain {
 	 */
 	public static void main(String[] args) throws Exception {
 		int port = PORT;
-		
+		createTestContact();
 		System.out.println("Starting Jetty server on port " + port);
 		
 		startServer( port );
@@ -204,6 +209,26 @@ public class JettyMain {
 		System.in.read();
 		System.out.println("Stopping server.");
 		stopServer();
+	}
+	
+	
+	/** add contacts for testing. */
+	private static void createTestContact( ) {
+		long id = 101; // usually we should let JPA set the id
+		ContactDao dao = DaoFactory.getInstance().getContactDao();
+		if (dao.find(id) == null) {
+			Contact test = new Contact("Test contact", "Joe Experimental", "none@testing.com");
+			test.addEmail("yawning@yahoo.com");
+			test.addEmail("foo@kung.com");
+			test.setId(id);
+			dao.save(test);
+		}
+		id++;
+		if (dao.find(id) == null) {
+			Contact test2 = new Contact("Another Test contact", "Testosterone", "testee@foo.com");
+			test2.setId(id);
+			dao.save(test2);
+		}
 	}
 
 }

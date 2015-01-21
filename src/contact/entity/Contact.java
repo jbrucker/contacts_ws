@@ -1,5 +1,8 @@
 package contact.entity;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +35,8 @@ public class Contact implements Serializable {
 	/** full name of this contact */
 	private String name;
 	/** contact's email */
-	private String email;
+	@XmlElement(name="email")
+	private List<String> emails;
 	/** URL of photo */
 	private String photoUrl;
 	/** person who owns this contact */
@@ -43,13 +47,16 @@ public class Contact implements Serializable {
 //	private User owner;
 	
 	/** Create a new contact with no data.  Intended for use by persistence framework. */
-	public Contact() { }
+	public Contact() { 
+		emails = new ArrayList<String>();
+	}
 	
 	/** Create a new contact with the given title, name, and email address. */
 	public Contact(String title, String name, String email ) {
+		this();
 		this.title = title;
 		this.name = name;
-		this.email = email;
+		emails.add( email );
 		this.photoUrl = "";
 		this.owner = "";
 	}
@@ -97,14 +104,21 @@ public class Contact implements Serializable {
 		this.title = title;
 	}
 
+	public List<String> getEmails() {
+		return emails;
+	}
+	
 	public String getEmail() {
-		return email;
+		if (emails.size()>0) return emails.get(0);
+		return "";
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmails(List<String> emails) {
+		this.emails = emails;
 	}
 
+	public void addEmail(String email) { emails.add(email); }
+	
 	public long getId() {
 		return id;
 	}
@@ -119,7 +133,9 @@ public class Contact implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%s: %s <%s> (%d)", title, name, email, id);
+		StringBuilder ebuf = new StringBuilder();
+		for(String email: emails) ebuf.append("<").append(email).append("> ");
+		return String.format("%s: %s <%s> (%d)", title, name, ebuf.toString(), id);
 	}
 	
 	/** Two contacts are equal if they have the same id,
@@ -136,7 +152,7 @@ public class Contact implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
+//		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((photoUrl == null) ? 0 : photoUrl.hashCode());
@@ -156,8 +172,8 @@ public class Contact implements Serializable {
 		if (other == null) throw new IllegalArgumentException("source contact may not be null");
 		// don't check the id value. Its the caller's responsibility to supply correct argument
 		this.setTitle(other.getTitle()); 
-		this.setName(other.getName()); 
-		this.setEmail(other.getEmail());
+		this.setName(other.getName());
+		Collections.copy(this.emails, other.emails);
 		this.setPhotoUrl(other.getPhotoUrl());
 	}
 	
@@ -174,7 +190,7 @@ public class Contact implements Serializable {
 		if (! isEmpty( update.getTitle()) ) this.setTitle(update.getTitle()); // empty nickname is ok
 		// other attributes: allow an empty string as a way of deleting an attribute in update (this is hacky)
 		if (update.getName() != null ) this.setName(update.getName()); 
-		if (update.getEmail() != null) this.setEmail(update.getEmail());
+//		if (update.getEmail() != null) this.setEmail(update.getEmail());
 		if (update.getPhotoUrl() != null) this.setPhotoUrl(update.getPhotoUrl());
 	}
 	
@@ -186,7 +202,5 @@ public class Contact implements Serializable {
 	private static boolean isEmpty(String arg) {
 		return arg == null || arg.matches("\\s*") ;
 	}
-
-	
 	
 }
