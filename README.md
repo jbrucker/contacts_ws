@@ -13,3 +13,5 @@ The files here are:
 *  lib/*                                 JPA libraries and Derby database
 
 These are examples. You can use, not use, or modify them.
+
+Refer to an issue #3.
